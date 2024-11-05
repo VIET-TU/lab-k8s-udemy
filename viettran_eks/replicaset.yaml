@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rs3
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app3
+  template: # bat dau tu day de dinh nghia mot pod
+    metadata:
+      labels: # thic dat bn lable cx dc (va tuy ten)
+        app: app3
+    spec:
+      containers:
+        - name: simaple-app1
+          image: vietaws/eks:v3

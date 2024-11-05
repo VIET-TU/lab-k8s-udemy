@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app2
+  template: # bat dau tu day de dinh nghia mot pod
+    metadata:
+      labels: # thic dat bn lable cx dc (va tuy ten)
+        app: app2
+    spec:
+      containers:
+        - name: simaple-app1
+          image: vietaws/eks:v2

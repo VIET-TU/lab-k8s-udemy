@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+        service_name: service_a
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:alpine3.18-perl
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "0.5" # Example value, adjust as per your requirements
+              memory: "512Mi" # Example value, adjust as per your requirements
+            requests:
+              cpu: "0.1" # Example value, adjust as per your requirements
+              memory: "256Mi" # Example value, adjust as per your requirements
+
+# maxSurge: Đây là số lượng tối đa của các Pod có thể được lên lịch vượt quá số lượng mong muốn của các Pod. Nó có thể là một số tuyệt đối (ví dụ, 5) hoặc một phần trăm của số lượng mong muốn của các Pod (ví dụ, 10%). Giá trị không thể là 0 nếu maxUnavailable là 0. Giá trị mặc định là 25%.
+
+# Pod cũ bị xóa đi và tahy bằng POD mới
+# maxUnavailable: Đây là số lượng tối đa của các Pod có thể không khả dụng trong suốt quá trình cập nhật. Nó cũng có thể là một số tuyệt đối hoặc một phần trăm của số lượng mong muốn của các Pod. Giá trị không thể là 0 nếu maxSurge là 0. Giá trị mặc định là 25%.
+
+# Ví dụ:
+
+# Giả sử bạn có một Deployment có 10 Pods và bạn đang thực hiện một cập nhật dần dần bằng cách sử dụng rollingUpdate.
+
+# Nếu bạn đặt maxSurge thành 2 và maxUnavailable thành 1, Kubernetes có thể tạo ra tối đa 12 Pods mới trong khi chỉ có tối đa 1 Pod không khả dụng trong khi cập nhật.
+
+# Nếu bạn đặt maxSurge thành 20% và maxUnavailable thành 10%, và Deployment của bạn có 100 Pods, Kubernetes có thể tạo ra tối đa 120 Pods mới trong quá trình cập nhật, và tối đa 10% tức là 10 Pods có thể không khả dụng.
+
+# Cả hai thông số này cho phép bạn kiểm soát cách Kubernetes thực hiện quá trình cập nhật, đảm bảo rằng ứng dụng của bạn vẫn hoạt động mà không gây ra sự gián đoạn đáng kể cho người dùng.
